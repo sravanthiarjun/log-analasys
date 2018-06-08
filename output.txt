@@ -1,0 +1,12 @@
+collection establishesd sucessfully
+THE POPULAR ARTICLES ARE:
+('Candidate is jerk, alleges rival', 677294L) -views
+('Bears love berries, alleges bear', 507602L) -views
+('Bad things gone, say good people', 340196L) -views
+THE POPULAR AUTHORS ARE:
+('Ursula La Multa', 2030376L) -views
+('Rudolf von Treppenwitz', 1693828L) -views
+('Anonymous Contributor', 680392L) -views
+('Markoff Chaney', 338228L) -views
+THE ERROR '%' IS:
+Jul 17, 2016--2.3 %
