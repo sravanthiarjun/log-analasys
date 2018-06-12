@@ -1,43 +1,43 @@
-#! /usr/bin/env
-import psycopg2
-conn = psycopg2.connect(dbname="news")
-if conn:
-    print("collection establishesd sucessfully")
-else:
 
-    print("unsucessfully")
+    #!/usr/bin/env python
+import psycopg2
+
+conn = psycopg2.connect(database="news", user="vagrant", password="vagrant")
+
+if conn:
+    print("connection established Successfully")
+
+else:
+    print("Unable to connect")
 
 cur = conn.cursor()
 
 
-def popular_articles():
-    print("THE POPULAR ARTICLES ARE:")
-    cur.execute("select title,views from common_views limit 3")
-    result = cur.fetchall()
-    for i in result:
-        print (str(i)+" -views")
+def articles_view():
+    cur.execute("select title,likes  from article_view limit 3;")
+    find = cur.fetchall()
+    print("The most popular three articles:")
+    for i in find:
+        print(str(i)+" - views")
 
 
-def popular_authors():
-    print("THE POPULAR AUTHORS ARE:")
-    cur.execute("select name,views from single_views ")
-    result = cur.fetchall()
-    for i in result:
-        print (str(i)+" -views")
+def author_view():
+    cur.execute("select name,views  from authors_view ;")
+    find = cur.fetchall()
+    print("The most popular article authors:")
+    for i in find:
+        print(str(i)+" - views")
 
 
-def error_percentage():
-    print("THE ERROR '%' IS:")
-cur.execute("""select to_char(day, 'Mon DD, YYYY') as day, percentage from
-            "errors_percent where percentage > 1.0 group by day, percentage
-            "order by"percentage desc;""")
-result = cur.fetchall()
-for i in range(len(result)):
-    date = result[i][0]
-    errors_percent = result[i][1]
-    print("%s--%.1f %% " % (date, errors_percent))
-popular_articles()
-popular_authors()
-error_percentage()
+def log_error_view():
+    cur.execute("select * from log_view where percentage_errors > 1 ;")
+    find = cur.fetchall()
+    print("On which day did more than 1%  of errors found:")
+    for i in find:
+        print(str(i)+" - errors")
+
+articles_view()
+author_view()
+log_error_view()
 cur.close()
 conn.close()
