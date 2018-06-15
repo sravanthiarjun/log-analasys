@@ -1,43 +1,45 @@
-
-    #!/usr/bin/env python
 import psycopg2
 
-conn = psycopg2.connect(database="news", user="vagrant", password="vagrant")
-
-if conn:
-    print("connection established Successfully")
-
-else:
-    print("Unable to connect")
-
+conn = psycopg2.connect(dbname='news', user='vagrant', password='vagrant')
 cur = conn.cursor()
+try:
+    print("successfully connected")
+except Exception as e:
+        print(e)
 
 
-def articles_view():
-    cur.execute("select title,likes  from article_view limit 3;")
-    find = cur.fetchall()
-    print("The most popular three articles:")
-    for i in find:
-        print(str(i)+" - views")
+def top_three_article_views():
+    cur.execute("select title,views from article_views limit 3;")
+    j = cur.fetchall()
+    print("\n======================================================")
+    print("What are the most popular three articles of all time ?")
+    print("======================================================\n")
+    for i, results in enumerate(j):
+        print i+1, str(results[0]),   "---",   results[1], "views"
 
 
-def author_view():
-    cur.execute("select name,views  from authors_view ;")
-    find = cur.fetchall()
-    print("The most popular article authors:")
-    for i in find:
-        print(str(i)+" - views")
+def popular_authors_views():
+    cur.execute("select name, views from author_view;")
+    j = cur.fetchall()
+    print("\n======================================================")
+    print("Who are the most popular article authors of all time ?")
+    print("======================================================\n")
+    for i, results in enumerate(j):
+        print i+1, str(results[0]),   "---",   results[1], "views"
 
 
-def log_error_view():
-    cur.execute("select * from log_view where percentage_errors > 1 ;")
-    find = cur.fetchall()
-    print("On which day did more than 1%  of errors found:")
-    for i in find:
-        print(str(i)+" - errors")
+def high_error_rate():
+    cur.execute("select *from log_view where Error_Percent>1;")
+    j = cur.fetchall()
+    print("\n======================================================")
+    print("On which days did more than 1% of requests lead to errors ?")
+    for i, results in enumerate(j):
+        print str(results[0]),   "---",   results[1], '%' 'errors'
+        print("======================================================")
 
-articles_view()
-author_view()
-log_error_view()
+
+top_three_article_views()
+popular_authors_views()
+high_error_rate()
 cur.close()
 conn.close()
