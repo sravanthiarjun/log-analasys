@@ -1,61 +1,37 @@
-# log_analysis
-About Queries in postgres database
-This Log analysis project is third project of Udacity Full Stack Nanodegree course:
-## To do this project we must install certain softwares as:
-     virtualBox
-     vagrant
-     postgres database
-     python
-## vagrant:
-##### This vagrant is used to run different operating system environment in on single OS.
-##### This project is completely based on Ubuntu operating system.
-##### After installing vagrant we should create a folder name vagrant in our directory.Later we open the command propmt or terminal in        the vagrant folder path.
-## Then,we should run some commands as:
-      vagrant -v
-      vagrant init ubuntu/trusty64( or some other vagrant environment for ubuntu)
-      Vagrant up
-      vagrant ssh
- we must install psycopg2 by having command : sudo apt-get install python-psycopg2 
- To change to postgres folder we should run command : sudo -i -u postgres
- Then after we should connect to  postgres database by having command psql.
-To display files in our directory we should use command : \l
-## Then,after we create user with some password by having command:
-     create user username with password 'something'
-     To see the roles command : \du
-## To make a database user with different roles:
-     alter user username with Superuser;
-     alter user username with Createrole;
-     alter user username with CreateDB; 
-#### To get exit we have command:\q or exit
-#### Now we should a database as vagarnt : sudo -i -u vagrant
-#### next command : Createdb vagrant 
-#### Now we should create database to our project name news by using following commands:
-     run psql command.After that we must create database name news by using:\c news
-     Then we get message as that you are connected to news database from vagrant..
-#### To fetch the data for our project we use the command that already discuused in the udacity course tutorials : psql -d news -f            filename.sql (This Zip file we get download from the udacity full stack course of log analysis project)
-#### Then after we use different queries to get data to certain neccessary question that aksed in the project.
-#### In this news data base we have three tables named:
-      articles
-      authors
-      log
- ## The first query is most popular three articles of all time:
- ### For this  I have created a view as  article_view
-     create  view  article_view as select title,count(*) as likes from articles,log where  log.path like concat('%',articles.slug) group by articles.title,articles.author order by likes desc;
-## The second query is most popular article all the time:
-### For this I have created a views as authors_view
-     create  view  authors_view as select name,count(*) as views from articles,authors,log where authors.id=articles.author and  log.path like concat('%',articles.slug) group by name order by views desc;
-## The third query is based on which day did more than 1% of requests lead to errors:
-### For  this I have created three views:
-#### 1.error_view : this view gives the number of errors that not found.
-     create view error_view as select date(time),count(*) as errors  from log where log.status like concat('404 NOT FOUND') group by date(time) order by errors desc;
-#### 2.total_view: this view gives the total views
-     create view total_view as select date(time),count(status) as total_errors from log group by date(time)  order by total_errors desc;
-#### 3. log_view:this view gives the percentage of errors
-     create view log_view as select total_view.date as date,((100.00*errors)/(total_errors)) as percentage_errors from error_view natural join total_view where error_view.date=total_view.date group by total_view.date,percentage_errors order by percentage_errors desc;
-## Queries:
- open the file and write the queries based on given conditions and save that file in the vagrant directory with .py extension.
-## To run:
-In the vagrant folder directory run the file using python filename.py
-#### Then I had checked my code in pep8 online checker.
-##### By this we can complete the loganalysis project.
- 
+# log__analysis
+This is the third project log_analysis, Udacity Full Stack Nanodegree course using the quaries of postgres database.
+##For do this project we should install certain softwares as: --virtualBox
+ --vagrant
+ --python3
+ --postgres database
+ ##vagrant is used run different operating system environment on single os.
+ ##This project is completely based on ubuntu os.
+ ##After installing vagrant we should create a folder name vagrant in our directory.Later we open the command propmt or terminal in the vagrant folder path.
+ ##Then should run these commands:--vagrant -v -> to know the version
+ --vagrant init ubuntu/trusty64 -> to vagrant environment for ubuntu.
+ --vagrant up ->to launch virtual mechine.
+ --vagrant ssh ->log into this ssh.
+ --sudo apt-get install python-psycopg2.
+ --sudo -i -u postgres ->to change the postgres database.
+ --psql ->to  connect the postgres database.
+ --\l ->to display the files in directory.
+ ##Create user name with password then enter \du to see the roles command.
+ ##Here we can see different roles like Superuser,Createrole,CreateDB.For creating these roles we use quires...
+ --alter user name with Superuser;
+ --alter user username with Createrole;
+ --alter user username with CreateDB; 
+ --\q to exit .
+ --sudo -i -u vagrant to database changes to vagrant.
+ --psql and then create database news.
+ --run \c news to change database to news.
+ ##For do this project we have a data we should download the newsdata zipfile  and fetch the data to the sql.
+ ##Run command   psql -d news -f newsdata.sql
+ ##In this news data we have 3 tables named as articles, authors, log.
+ ##In this first asked most popular three articles in all the time.for that i created view as 
+ create view article_views as select title, author, count(title) as views from articles, log where log.path like concat('%',articles.slug) group by articles.title, articles.author order by views desc;
+ ##Then asked most popular article all the time for that i wrote query as
+ create view author_view as select name,count(articles.author) as views from articles, authors, log where log.path like concat('%',articles.slug) and articles.author=authors.id group by authors.name order by views desc;
+  ##For calculate more than 1% 
+  create view log_view as select date(time), round(100.0*sum(case log.status when '200 OK' then 0 else 1 end)/count(log.status),2) as Error_Percent from log group by date(time) order by Error_Percent desc;
+  ##all of these commands run on vagrant.
+  #after create a python file should run on vagrant.
